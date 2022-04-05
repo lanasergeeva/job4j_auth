@@ -1,5 +1,10 @@
 package ru.job4j.auth.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -14,14 +19,30 @@ public class Person {
     @Column(name = "password")
     private String password;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Employee employee;
+
     public Person() {
     }
 
-    public static Person of(String login, String password) {
+    public static Person of(String login, String password, Employee employee) {
         Person person = new Person();
         person.setLogin(login);
         person.setPassword(password);
+        person.setEmployee(employee);
         return person;
+    }
+
+    @JsonIgnore
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    @JsonProperty
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
     public int getId() {
@@ -47,6 +68,7 @@ public class Person {
     public void setPassword(String password) {
         this.password = password;
     }
+
 
     @Override
     public boolean equals(Object o) {
