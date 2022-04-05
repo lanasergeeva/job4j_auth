@@ -108,11 +108,9 @@ public class EmployeeController {
         Employee rsl = null;
         List<Employee> all = employees.findAll();
         for (Employee employee : all) {
-            for (Person person : employee.getAccounts()) {
-                if (person.getId() == id) {
-                    rsl = employee;
-                    break;
-                }
+            if (employee.getId() == id) {
+                rsl = employee;
+                break;
             }
         }
         return rsl;
